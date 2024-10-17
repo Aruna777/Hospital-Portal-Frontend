@@ -1,20 +1,19 @@
 import React, { useState } from "react";
 import { FiPhoneCall, FiUser } from "react-icons/fi";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [showPhoneNumber, setShowPhoneNumber] = useState(false);
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
 
-  // Sample phone number
   const phoneNumber = "123-456-7890";
 
   const handleContactClick = () => {
-    setShowPhoneNumber((prev) => !prev); // Toggle phone number display
+    setShowPhoneNumber((prev) => !prev);
   };
 
   const handleProfileClick = () => {
-    navigate("/profile"); // Navigate to /profile
+    navigate("/profile");
   };
 
   return (
@@ -37,7 +36,7 @@ const Navbar = () => {
         )}
         <button
           className="flex items-center bg-white text-gray-700 px-3 py-2 md:px-4 md:py-2 rounded-full hover:bg-gray-200 shadow"
-          onClick={handleProfileClick} // Add onClick handler for Profile button
+          onClick={handleProfileClick}
         >
           <FiUser className="mr-2" /> Profile
         </button>

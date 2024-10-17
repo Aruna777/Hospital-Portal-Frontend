@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProfileData } from "../redux/profileSlice"; // Import your existing action
+import { fetchProfileData } from "../redux/profileSlice";
 
 const Profile = () => {
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.profile.userId);
-  const { user, loading, error } = useSelector((state) => state.profile); // Selecting user profile slice
+  const { user, loading, error } = useSelector((state) => state.profile);
 
   useEffect(() => {
     if (userId) {

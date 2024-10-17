@@ -7,7 +7,7 @@ export const fetchProfileData = createAsyncThunk(
       `http://localhost:8096/aggregate/profiles/${userId}`
     );
     const data = await response.json();
-    console.log("Fetched Profile Data:", data); // Log fetched data for debugging
+    console.log("Fetched Profile Data:", data);
     return data;
   }
 );
@@ -49,7 +49,7 @@ const profileSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchProfileData.fulfilled, (state, action) => {
-      console.log("Profile Data Set:", action.payload); // Log state updates for debugging
+      console.log("Profile Data Set:", action.payload);
       state.userProfile = action.payload.userProfile;
       state.appointments = action.payload.appointments;
       state.consultations = action.payload.consultations;

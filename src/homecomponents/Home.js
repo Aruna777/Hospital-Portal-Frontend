@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchProfileData, updateCheckup } from "../redux/profileSlice";
-//import { addCheckup } from "../redux/checkupSlice";
 import {
   CalendarIcon,
   HeartIcon,
@@ -31,7 +30,6 @@ const Home = () => {
   const userId = useSelector((state) => state.profile.userId);
 
   useEffect(() => {
-    // Subscribe to SSE updates on mount
     const subscribeToSSE = () => {
       console.log("initiatesse");
       const eventSource = new EventSource(
@@ -40,11 +38,10 @@ const Home = () => {
 
       eventSource.onmessage = (event) => {
         const newCheckup = JSON.parse(event.data);
-        console.log("New Checkup Update:", newCheckup); // Log for debugging
-        dispatch(updateCheckup(newCheckup)); // Dispatch an action to update the Redux state with the new checkup data
+        console.log("New Checkup Update:", newCheckup);
+        dispatch(updateCheckup(newCheckup));
       };
       eventSource.onerror = () => {
-        // Try to reconnect in 5 seconds in case of an error
         eventSource.close();
         setTimeout(() => {
           subscribeToSSE();
