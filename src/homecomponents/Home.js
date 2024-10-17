@@ -1,5 +1,8 @@
-import React from "react";
 import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchProfileData, updateCheckup } from "../redux/profileSlice";
+//import { addCheckup } from "../redux/checkupSlice";
 import {
   CalendarIcon,
   HeartIcon,
@@ -20,6 +23,42 @@ import {
 } from "@heroicons/react/24/outline";
 
 const Home = () => {
+  const dispatch = useDispatch();
+  const { checkups = [] } = useSelector((state) => state.profile || {});
+
+  const appointments = useSelector((state) => state.profile.appointments);
+  const consultations = useSelector((state) => state.profile.consultations);
+  const userId = useSelector((state) => state.profile.userId);
+
+  useEffect(() => {
+    // Subscribe to SSE updates on mount
+    const subscribeToSSE = () => {
+      console.log("initiatesse");
+      const eventSource = new EventSource(
+        "http://localhost:8096/sse/checkup-updates"
+      );
+
+      eventSource.onmessage = (event) => {
+        const newCheckup = JSON.parse(event.data);
+        console.log("New Checkup Update:", newCheckup); // Log for debugging
+        dispatch(updateCheckup(newCheckup)); // Dispatch an action to update the Redux state with the new checkup data
+      };
+      eventSource.onerror = () => {
+        // Try to reconnect in 5 seconds in case of an error
+        eventSource.close();
+        setTimeout(() => {
+          subscribeToSSE();
+        }, 5000);
+      };
+    };
+    if (userId) {
+      dispatch(fetchProfileData(userId));
+      subscribeToSSE();
+    } else {
+      console.error("User ID is undefined");
+    }
+  }, [dispatch, userId]);
+
   const specialties = [
     {
       name: "Cardiology",
@@ -84,8 +123,11 @@ const Home = () => {
   ];
 
   return (
-    <div className="flex flex-col items-center h-screen bg-gray-100">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-4xl px-4 mt-20">
+    <div className="flex flex-col items-center min-h-screen bg-gradient-to-b from-indigo-100 to-blue-50">
+      <h2 className="text-4xl font-bold text-center mb-8 mt-10">
+        Welcome to HealthCare Portal
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-4xl px-4 mt-10">
         <Link
           to="/BookAppointment"
           className="bg-white shadow-lg rounded-lg p-10 flex flex-col items-center justify-center cursor-pointer transform hover:scale-105 transition-transform hover:shadow-xl hover:bg-purple-100 border border-purple-200"
@@ -117,6 +159,130 @@ const Home = () => {
         </Link>
       </div>
 
+      <div className="mt-12 w-full max-w-4xl px-4">
+        <h2 className="text-4xl font-bold text-center mb-8">View Bookings</h2>
+        <div className="flex flex-col md:flex-row justify-between">
+          <div className="w-full md:w-1/3 mx-2">
+            <h2 className="text-3xl font-semibold text-center mb-4">
+              Appointments Booked
+            </h2>
+            {appointments.length === 0 ? (
+              <p className="text-center">No appointments booked.</p>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md mb-8 h-44">
+                  <thead>
+                    <tr className="bg-purple-300">
+                      <th className="border border-gray-300 p-4 text-left">
+                        Reason
+                      </th>
+                      <th className="border border-gray-300 p-4 text-left">
+                        Date
+                      </th>
+                      <th className="border border-gray-300 p-4 text-left">
+                        Time
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {appointments.map((appointment) => (
+                      <tr
+                        key={appointment.appointmentId}
+                        className="hover:bg-purple-100"
+                      >
+                        <td className="border border-gray-300 p-4">
+                          {appointment.appointmentReason}
+                        </td>
+                        <td className="border border-gray-300 p-4">
+                          {appointment.appointmentDate}
+                        </td>
+                        <td className="border border-gray-300 p-4">
+                          {appointment.appointmentTime}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+
+          <div className="w-full md:w-1/3 mx-2">
+            <h2 className="text-3xl font-semibold text-center mb-4">
+              Health Checkups Booked
+            </h2>
+            {checkups.length === 0 ? (
+              <p className="text-center">No checkups booked.</p>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md mb-8 h-44">
+                  <thead>
+                    <tr className="bg-red-300">
+                      <th className="border border-gray-300 p-4 text-left">
+                        Date
+                      </th>
+                      <th className="border border-gray-300 p-4 text-left">
+                        Status
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {checkups.map((checkup) => (
+                      <tr key={checkup.checkupId} className="hover:bg-red-100">
+                        <td className="border border-gray-300 p-4">
+                          {checkup.checkupDate}
+                        </td>
+                        <td className="border border-gray-300 p-4">
+                          {checkup.checkupStatus}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+
+          <div className="w-full md:w-1/3 mx-2">
+            <h2 className="text-3xl font-semibold text-center mb-4">
+              Consultations Booked
+            </h2>
+            {consultations.length === 0 ? (
+              <p className="text-center">No consultations booked.</p>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md mb-8 h-44">
+                  <thead>
+                    <tr className="bg-blue-300">
+                      <th className="border border-gray-300 p-4 text-left">
+                        Date
+                      </th>
+                      <th className="border border-gray-300 p-4 text-left">
+                        Status
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {consultations.map((consultation) => (
+                      <tr
+                        key={consultation.consultationId}
+                        className="hover:bg-blue-100"
+                      >
+                        <td className="border border-gray-300 p-4">
+                          {consultation.consultationDate}
+                        </td>
+                        <td className="border border-gray-300 p-4">
+                          {consultation.consultationStatus}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
       <div className="mt-12 w-full max-w-4xl px-4">
         <h2 className="text-4xl font-bold text-center mb-8">
           Explore our Centres of Clinical Excellence

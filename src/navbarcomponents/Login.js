@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUserId } from "../redux/profileSlice";
 import axios from "axios";
 
 const Login = ({ onLoginSuccess }) => {
+  const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -20,16 +22,26 @@ const Login = ({ onLoginSuccess }) => {
       );
 
       if (response.status === 200) {
+        const userId = response.data;
+        dispatch(setUserId(userId));
+        console.log(
+          "userId from localStorage:",
+          localStorage.getItem("user_id")
+        );
         onLoginSuccess();
-        navigate("/");
+        //navigate("/");
       }
     } catch (error) {
+      console.error(
+        "Login Error:",
+        error.response ? error.response.data : error.message
+      );
       alert("Invalid credentials");
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-indigo-100 to-blue-50">
       <form
         onSubmit={handleLogin}
         className="bg-white p-8 rounded-lg shadow-lg w-96"

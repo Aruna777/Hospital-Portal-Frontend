@@ -3,12 +3,8 @@ import axios from "axios";
 
 const HealthCheckup = () => {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    phoneNumber: "",
-    checkupDate: "",
-    status: "PENDING",
-    patientId: "",
+    checkup_date: "",
+    checkup_status: "PENDING",
   });
 
   const [feedback, setFeedback] = useState("");
@@ -24,12 +20,8 @@ const HealthCheckup = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const checkupData = {
-      patientId: formData.patientId,
-      checkupDate: formData.checkupDate,
-      status: formData.status,
-      firstname: formData.firstName,
-      lastname: formData.lastName,
-      phonenumber: formData.phoneNumber,
+      checkup_date: formData.checkup_date,
+      checkup_status: formData.checkup_status,
     };
 
     try {
@@ -39,7 +31,7 @@ const HealthCheckup = () => {
         },
       });
       setFeedback(
-        `Your health checkup is scheduled on ${formData.checkupDate}.`
+        `Your health checkup is scheduled on ${formData.checkup_date}.`
       );
     } catch (error) {
       setFeedback("Booking is unsuccessful.");
@@ -47,7 +39,7 @@ const HealthCheckup = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-200 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-b from-indigo-100 to-blue-50 flex items-center justify-center p-4">
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-lg rounded-lg p-10 w-full max-w-lg md:max-w-2xl lg:max-w-3xl"
@@ -57,7 +49,7 @@ const HealthCheckup = () => {
         </h2>
 
         {Object.entries(formData).map(([key, value]) => {
-          if (key === "status") {
+          if (key === "checkup_status") {
             return (
               <div key={key} className="mb-4">
                 <label className="block text-gray-700 font-medium">
@@ -71,8 +63,8 @@ const HealthCheckup = () => {
                   className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
                 >
                   <option value="PENDING">PENDING</option>
+                  <option value="COMPLETED">ACCEPTED</option>
                   <option value="COMPLETED">COMPLETED</option>
-                  <option value="CANCELLED">CANCELLED</option>
                 </select>
               </div>
             );
@@ -80,14 +72,17 @@ const HealthCheckup = () => {
           return (
             <div key={key} className="mb-4">
               <label className="block text-gray-700 font-medium">
-                {key.replace(/([A-Z])/g, " $1").toUpperCase()}
+                {key === "checkup_date"
+                  ? "Checkup Date"
+                  : key.replace(/([A-Z])/g, " $1").toUpperCase()}
               </label>
               <input
-                type={key === "checkupDate" ? "date" : "text"}
+                type={key === "checkup_date" ? "date" : "text"}
                 name={key}
                 value={value}
                 onChange={handleChange}
                 required
+                placeholder={key === "checkup_date" ? "YYYY-MM-DD" : ""}
                 className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>

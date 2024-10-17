@@ -3,14 +3,10 @@ import axios from "axios";
 
 const ConsultOnline = () => {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    phoneNumber: "",
     consultationDate: "",
-    startTime: "",
-    endTime: "",
-    reason: "",
-    status: "PENDING",
+    consultationTime: "",
+    consultationReason: "",
+    consultationStatus: "PENDING",
   });
 
   const [feedback, setFeedback] = useState("");
@@ -26,14 +22,10 @@ const ConsultOnline = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const consultationData = {
-      firstname: formData.firstName,
-      lastname: formData.lastName,
-      phonenumber: formData.phoneNumber,
-      consultationDate: formData.consultationDate,
-      startTime: formData.startTime,
-      endTime: formData.endTime,
-      reason: formData.reason,
-      status: formData.status,
+      consultation_date: formData.consultationDate,
+      consultation_time: formData.consultationTime,
+      consultation_reason: formData.consultationReason,
+      consultation_status: formData.consultationStatus,
     };
 
     try {
@@ -47,7 +39,7 @@ const ConsultOnline = () => {
         }
       );
       setFeedback(
-        `Your consultation is scheduled on ${formData.consultationDate} from ${formData.startTime} to ${formData.endTime}.`
+        `Your consultation is scheduled on ${formData.consultationDate} at ${formData.consultationTime}.`
       );
     } catch (error) {
       setFeedback("Booking is unsuccessful.");
@@ -55,7 +47,7 @@ const ConsultOnline = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-200 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-b from-indigo-100 to-blue-50 flex items-center justify-center p-4">
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-lg rounded-lg p-10 w-full max-w-lg md:max-w-2xl lg:max-w-3xl"
@@ -64,49 +56,65 @@ const ConsultOnline = () => {
           Schedule Online Consultation
         </h2>
 
-        {Object.entries(formData).map(([key, value]) => {
-          if (key === "status") {
-            return (
-              <div key={key} className="mb-4">
-                <label className="block text-gray-700 font-medium">
-                  Status
-                </label>
-                <select
-                  name={key}
-                  value={value}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
-                >
-                  <option value="PENDING">PENDING</option>
-                  <option value="COMPLETED">COMPLETED</option>
-                  <option value="CANCELLED">CANCELLED</option>
-                </select>
-              </div>
-            );
-          }
-          return (
-            <div key={key} className="mb-4">
-              <label className="block text-gray-700 font-medium">
-                {key.replace(/([A-Z])/g, " $1").toUpperCase()}
-              </label>
-              <input
-                type={
-                  key === "consultationDate"
-                    ? "date"
-                    : key.includes("Time")
-                    ? "time"
-                    : "text"
-                }
-                name={key}
-                value={value}
-                onChange={handleChange}
-                required
-                className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
-            </div>
-          );
-        })}
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium">
+            Consultation Date
+          </label>
+          <input
+            type="date"
+            name="consultationDate"
+            value={formData.consultationDate}
+            onChange={handleChange}
+            placeholder="Select a date"
+            required
+            className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium">
+            Consultation Time
+          </label>
+          <input
+            type="time"
+            name="consultationTime"
+            value={formData.consultationTime}
+            onChange={handleChange}
+            required
+            className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium">
+            Consultation Reason
+          </label>
+          <input
+            type="text"
+            name="consultationReason"
+            value={formData.consultationReason}
+            onChange={handleChange}
+            required
+            className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium">
+            Consultation Status
+          </label>
+          <select
+            name="consultationStatus"
+            value={formData.consultationStatus}
+            onChange={handleChange}
+            required
+            className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
+          >
+            <option value="PENDING">PENDING</option>
+            <option value="COMPLETED">COMPLETED</option>
+            <option value="CANCELLED">CANCELLED</option>
+          </select>
+        </div>
 
         <button
           type="submit"

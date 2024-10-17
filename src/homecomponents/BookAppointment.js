@@ -3,15 +3,10 @@ import axios from "axios";
 
 const BookAppointment = () => {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    phoneNumber: "",
-    email: "",
     appointmentDate: "",
     appointmentTime: "",
     appointmentReason: "",
-    patientId: "",
-    status: "PENDING",
+    appointmentStatus: "PENDING",
   });
 
   const [feedback, setFeedback] = useState("");
@@ -27,15 +22,10 @@ const BookAppointment = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const bookingData = {
-      patientId: formData.patientId,
-      appointmentDate: formData.appointmentDate,
-      appointmentTime: formData.appointmentTime,
-      status: formData.status,
-      appointmentReason: formData.appointmentReason,
-      firstname: formData.firstName,
-      lastname: formData.lastName,
-      email: formData.email,
-      phonenumber: formData.phoneNumber,
+      appointment_date: formData.appointmentDate,
+      appointment_time: formData.appointmentTime,
+      appointment_status: formData.appointmentStatus,
+      appointment_reason: formData.appointmentReason,
     };
 
     try {
@@ -53,7 +43,7 @@ const BookAppointment = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-200 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-b from-indigo-100 to-blue-50 flex items-center justify-center p-4">
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-lg rounded-lg p-10 w-full max-w-lg md:max-w-2xl lg:max-w-3xl"
@@ -63,11 +53,11 @@ const BookAppointment = () => {
         </h2>
 
         {Object.entries(formData).map(([key, value]) => {
-          if (key === "status") {
+          if (key === "appointmentStatus") {
             return (
               <div key={key} className="mb-4">
                 <label className="block text-gray-700 font-medium">
-                  Status
+                  Appointment Status
                 </label>
                 <select
                   name={key}
@@ -103,7 +93,9 @@ const BookAppointment = () => {
           return (
             <div key={key} className="mb-4">
               <label className="block text-gray-700 font-medium">
-                {key.replace(/([A-Z])/g, " $1").toUpperCase()}
+                {key === "appointmentDate"
+                  ? "Appointment Date"
+                  : key.replace(/([A-Z])/g, " $1").replace("Reason", " Reason")}
               </label>
               <input
                 type={key.includes("Date") ? "date" : "text"}
@@ -111,6 +103,7 @@ const BookAppointment = () => {
                 value={value}
                 onChange={handleChange}
                 required
+                placeholder={key === "appointmentDate" ? "Select Date" : ""}
                 className="mt-1 p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>

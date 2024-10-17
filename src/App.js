@@ -4,18 +4,17 @@ import Navbar from "./navbarcomponents/Navbar";
 import Home from "./homecomponents/Home";
 import Login from "./navbarcomponents/Login";
 import Register from "./navbarcomponents/Register";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import ConsultOnline from "./homecomponents/ConsultOnline";
 import HealthCheckup from "./homecomponents/HealthCheckup";
 import BookAppointment from "./homecomponents/BookAppointment";
+import Profile from "./navbarcomponents/Profile";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const navigate = useNavigate();
 
   const handleLoginSuccess = () => {
     setIsLoggedIn(true);
-    navigate("/");
   };
 
   return (
@@ -39,6 +38,7 @@ function App() {
         <Route path="/BookAppointment" element={<BookAppointment />} />
         <Route path="/HealthCheckup" element={<HealthCheckup />} />
         <Route path="/ConsultOnline" element={<ConsultOnline />} />
+        <Route path="/profile" element={<Profile />} />
         <Route
           path="/login"
           element={<Login onLoginSuccess={handleLoginSuccess} />}

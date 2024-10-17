@@ -6,6 +6,7 @@ const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [phoneNumber, setPhonenumber] = useState("");
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
@@ -15,6 +16,7 @@ const Register = () => {
       username,
       password,
       email,
+      phoneNumber,
     };
 
     try {
@@ -37,7 +39,7 @@ const Register = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-indigo-100 to-blue-50">
       <form
         onSubmit={handleRegister}
         className="bg-white p-8 rounded-lg shadow-lg w-96"
@@ -56,6 +58,14 @@ const Register = () => {
           className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+        />
+
+        <input
+          type="phonenumber"
+          placeholder="Phone Number"
+          className="w-full p-3 mb-6 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+          value={phoneNumber}
+          onChange={(e) => setPhonenumber(e.target.value)}
         />
         <input
           type="password"
