@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUserId } from "../redux/profileSlice";
 import axios from "axios";
@@ -8,6 +8,8 @@ const Login = ({ onLoginSuccess }) => {
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -29,7 +31,7 @@ const Login = ({ onLoginSuccess }) => {
           localStorage.getItem("user_id")
         );
         onLoginSuccess();
-        //navigate("/");
+        navigate("/");
       }
     } catch (error) {
       console.error(
